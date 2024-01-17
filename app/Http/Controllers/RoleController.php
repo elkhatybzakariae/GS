@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Helpers\Helpers;
+use App\Http\Controllers\Controller;
+use App\Models\Role;
+use Illuminate\Http\Request;
+
+class RoleController extends Controller
+{
+    public function roleindex()
+    {
+        return response()->json(['msg' => 'role created']);
+
+        // $roles = Role::all();
+        // return view('auth.superadmin.roleindex', compact('roles'));
+    }
+    public function rolecreate()
+    {
+        return view('auth.superadmin.createrole');
+    }
+    public function rolestore(Request $request)
+    {
+        $id = Helpers::generateIdRole();
+        $validation = $request->validate([
+            'role_name' => 'required|string|max:50',
+        ]);
+        $role=Role::create([
+            'id_R'=> $id,
+            'role_name' => $validation['role_name'],
+        ]);
+        // return redirect()->route('roleindex');
+        return response()->json(['role' => $role]);
+    }
+    public function deleterole($id)
+    {
+        Role::find($id)->delete();
+        return redirect()->route('roleindex');
+    }
+}

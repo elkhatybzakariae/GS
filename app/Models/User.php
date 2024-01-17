@@ -17,10 +17,23 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $table = 'users';
+    protected $primaryKey = 'id_U';
+    public $incrementing = false;
+    public $timestamps = true;
     protected $fillable = [
-        'name',
+        'id_U',
+        'firstName',
+        'lastName',
+        'userName',
+        'pin',
         'email',
+        'phone',
+        'image',
+        'status',
         'password',
+        'id_R',
     ];
 
     /**
@@ -30,7 +43,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        // 'remember_token',
     ];
 
     /**
@@ -38,8 +51,14 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    // protected $casts = [
+    //     'email_verified_at' => 'datetime',
+    //     'password' => 'hashed',
+    // ];
+
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class,'id_R');
+    }
 }
