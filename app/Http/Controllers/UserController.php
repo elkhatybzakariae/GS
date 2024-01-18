@@ -25,18 +25,20 @@ class UserController extends Controller
             'Email' => 'required|email|max:50',
             'Password' => 'required|string|min:8',
         ]);
-        
+
         $fullname = explode(' ', $validation['fullName']);
-            $newuser = User::create([
-                'id_U' => $id_U,
-                'FirstName' => $fullname[0],
-                'LastName' => $fullname[1],
-                'Email' => $validation['Email'],
-                'Password' => Hash::make($validation['Password']),
-                'id_R' => $type->id_R,
-            ]);
-            auth()->login($newuser);
-            return redirect()->route('index');
+        
+        $role = Role::where('role_name', '')->first();
+        $newuser = User::create([
+            'id_U' => $id_U,
+            'FirstName' => $fullname[0],
+            'LastName' => $fullname[1],
+            'Email' => $validation['Email'],
+            'Password' => Hash::make($validation['Password']),
+            'id_R' => $role->id_R,
+        ]);
+        auth()->login($newuser);
+        return redirect()->route('index');
     }
     public function loginpage()
     {
