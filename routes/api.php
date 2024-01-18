@@ -17,11 +17,11 @@ use App\Http\Controllers\RoleController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::get('/index', [HomeController::class,'index']);
+Route::get('/index', [HomeController::class, 'index']);
 
 
 Route::group(['middleware' => 'api'], function () {
@@ -32,4 +32,9 @@ Route::group(['middleware' => 'api'], function () {
     Route::delete('/delete/role/{id}', [RoleController::class, 'deleterole'])->name('api.deleterole');
     Route::get('/edit/user/{id}', [UserController::class, 'edituser'])->name('api.edituser');
     Route::put('/update/user/{id}', [UserController::class, 'updateuser'])->name('api.updateuser');
+    Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 });
+Route::get('/signup', [UserController::class, 'registerpage'])->name('registerpage');
+Route::post('/register', [UserController::class, 'register'])->name('register');
+Route::get('/signin', [UserController::class, 'loginpage'])->name('loginpage');
+Route::post('/login', [UserController::class, 'login'])->name('login');

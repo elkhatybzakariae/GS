@@ -22,23 +22,27 @@ class UserController extends Controller
         $id_U = Helpers::generateIdU();
         $validation = $request->validate([
             'fullName' => 'required|string|max:50',
-            'Email' => 'required|email|max:50',
-            'Password' => 'required|string|min:8',
+            'email' => 'required|email|max:50',
+            'password' => 'required|string|min:8',
         ]);
 
         $fullname = explode(' ', $validation['fullName']);
-        
-        $role = Role::where('role_name', '')->first();
+
+        $role = Role::where('role_name', 'owner')->first();
         $newuser = User::create([
             'id_U' => $id_U,
-            'FirstName' => $fullname[0],
-            'LastName' => $fullname[1],
-            'Email' => $validation['Email'],
-            'Password' => Hash::make($validation['Password']),
+            'firstName' => $fullname[0],
+            'lastName' => $fullname[1],
+            'email' => $validation['email'],
+            'password' => Hash::make($validation['password']),
             'id_R' => $role->id_R,
         ]);
-        auth()->login($newuser);
-        return redirect()->route('index');
+        // auth()->login($newuser);
+        $token = $request->user()->createToken('_token')->plainTextToken;
+
+        return response()->json(['user' => $newuser, 'token' => $token]);
+
+        // return response()->json($newuser);
     }
     public function loginpage()
     {
@@ -47,28 +51,51 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $v = $request->validate([
-            'Email' => 'required|email|max:50',
-            'Password' => 'required|string|min:8',
+            'email' => 'required|email|max:50',
+            'password' => 'required|string|min:8',
         ]);
-        $u = User::where('Email', $request->Email)->first();
+        $user = User::where('email', $request->email)->first();
 
-        if ($u) {
-            if (Hash::check($request->Password, $u->Password)) {
-                if ($u->roles->contains('role_name', 'client')) {
-                    Auth::login($u);
-                    return redirect()->route('index');
-                } else {
-                    Auth::login($u);
-                }
+        // return response()->json($v);
+        if ($user) {
+            if (Hash::check($request->password, $user->password)) {
+                // if ($user->role && $user->role->role_name === 'owner') {
+                    $token = $request->user()->createToken('token-name')->plainTextToken;
+
+                    return response()->json(['user' => $user, 'token' => $token]);
+                    // return response()->json(['msg' => 'hi :)']);
+                // } else {
+
+                //     $token = $request->user()->createToken('token-name')->plainTextToken;
+
+                //     return response()->json(['user' => $user, 'token' => $token]);
+                //     // Auth::login($user);
+                //     // return response()->json(['msg' => ':)']);
+                // }
+            } else {
+
+                return response()->json(['msg' => 'mot de passe incorect :(']);
             }
-            return redirect()->route('loginpage');
+            // return redirect()->route('loginpage');
         } else {
-            return back()->with('error', 'Invalid email or password.');
+            // return back()->with('error', 'Invalid email or password.');            
+            return response()->json(['msg' => 'not found :(']);
         }
+        // $credentials = $request->only(['email', 'password']);
+
+        // if (Auth::attempt($credentials)) {
+        //     $token = $request->user()->createToken('token-name')->plainTextToken;
+
+        //     return response()->json(['token' => $token]);
+        // }
+
+        // return response()->json(['error' => 'Unauthorized'], 401);
     }
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('loginpage');
+        // return redirect()->route('loginpage');
+
+        return response()->json(['msg' => 'logout']);
     }
 }
