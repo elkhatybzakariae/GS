@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -37,10 +38,13 @@ class UserController extends Controller
             'password' => Hash::make($validation['password']),
             'id_R' => $role->id_R,
         ]);
-        // auth()->login($newuser);
-        $token = $request->user()->createToken('_token')->plainTextToken;
+        $token = JWTAuth::fromUser($newuser);
 
-        return response()->json(['user' => $newuser, 'token' => $token]);
+        return response()->json(compact('token'));
+        // auth()->login($newuser);
+        // $token = $request->user()->createToken('_token')->plainTextToken;
+
+        // return response()->json(['user' => $newuser, 'token' => $token]);
 
         // return response()->json($newuser);
     }
@@ -60,10 +64,14 @@ class UserController extends Controller
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
                 // if ($user->role && $user->role->role_name === 'owner') {
-                    $token = $request->user()->createToken('token-name')->plainTextToken;
 
-                    return response()->json(['user' => $user, 'token' => $token]);
-                    // return response()->json(['msg' => 'hi :)']);
+                $token = JWTAuth::fromUser($user);
+
+                // return response()->json(compact('token'));
+                // $token = $request->user()->createToken('token-name')->plainTextToken;
+
+                return response()->json(['user' => $user, 'token' => $token]);
+                // return response()->json(['msg' => 'hi :)']);
                 // } else {
 
                 //     $token = $request->user()->createToken('token-name')->plainTextToken;
@@ -93,9 +101,12 @@ class UserController extends Controller
     }
     public function logout()
     {
-        Auth::logout();
-        // return redirect()->route('loginpage');
+        // Auth::logout();
+        // // return redirect()->route('loginpage');
 
-        return response()->json(['msg' => 'logout']);
+        // return response()->json(['msg' => 'logout']);
+        $token = JWTAuth::parseToken()->refresh();
+
+        return response()->json(compact('token'));
     }
 }
