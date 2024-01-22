@@ -9,33 +9,38 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    public function roleindex()
+    public function roleindex(Request $request)
     {
-        return response()->json(['msg' => 'role created']);
-
-        // $roles = Role::all();
-        // return view('auth.superadmin.roleindex', compact('roles'));
+        $roles = Role::all();
+        return response()->json(['roles' => $roles]);
     }
-    public function rolecreate()
-    {
-        return view('auth.superadmin.createrole');
-    }
+    // public function rolecreate()
+    // {
+    //     return view('auth.superadmin.createrole');
+    // }
     public function rolestore(Request $request)
     {
         $id = Helpers::generateIdRole();
         $validation = $request->validate([
             'role_name' => 'required|string|max:50',
+            'AccessPOS' => 'required',
+            'AccessBO' => 'required',
         ]);
-        $role=Role::create([
-            'id_R'=> $id,
+        $role = Role::create([
+            'id_R' => $id,
             'role_name' => $validation['role_name'],
+            'AccessPOS' => $validation['AccessPOS'],
+            'AccessBO' => $validation['AccessBO'],
         ]);
-        // return redirect()->route('roleindex');
         return response()->json(['role' => $role]);
     }
-    public function deleterole($id)
+    public function deleterole($id, Request $request)
     {
-        Role::find($id)->delete();
-        return redirect()->route('roleindex');
+        $role = Role::find($id);
+        if (!$role) {
+            return response()->json(['error' => 'Role not found'], 404);
+        }
+        $role->delete();
+        return response()->json(['message' => 'Role deleted successfully']);
     }
 }

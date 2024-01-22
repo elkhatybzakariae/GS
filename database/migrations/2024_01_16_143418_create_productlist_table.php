@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('productlist', function (Blueprint $table) {
             $table->string('id_PL')->primary();
-            $table->string('question');
+            // $table->string('question');
             $table->string('producttable_id');
             $table->string('producttable_type');
             $table->string('QTY');

@@ -12,7 +12,7 @@ class Role extends Model
     protected $primaryKey = 'id_R';
     public $incrementing = false;
     public $timestamps = true;
-    protected $fillable = ['id_R','role_name'];
+    protected $fillable = ['id_R','role_name','AccessBO','AccessPOS'];
     public function users()
     {
         return $this->hasMany(User::class,'id_R');

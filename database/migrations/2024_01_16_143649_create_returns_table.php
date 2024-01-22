@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('returns', function (Blueprint $table) {
             $table->string('id_Ret')->primary();
-            $table->string('question');
+            // $table->string('question');
             $table->string('returntable_id');
             $table->string('returntable_type');
             $table->string('date');

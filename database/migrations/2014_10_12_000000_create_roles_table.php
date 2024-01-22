@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->string('id_R')->primary();
             $table->string('role_name');
+            $table->boolean('AccessPOS');
+            $table->boolean('AccessBO');
             $table->timestamps();
         });
     }
