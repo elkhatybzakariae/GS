@@ -38,9 +38,9 @@ class UserController extends Controller
             'password' => Hash::make($validation['password']),
             'id_R' => $role->id_R,
         ]);
-        $token = JWTAuth::fromUser($newuser);
+        // $token = JWTAuth::fromUser($newuser);compact('token')
 
-        return response()->json(compact('token'));
+        return response()->json();
         // auth()->login($newuser);
         // $token = $request->user()->createToken('_token')->plainTextToken;
 
