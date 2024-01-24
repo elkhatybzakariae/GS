@@ -37,14 +37,16 @@ class UserController extends Controller
             'email' => $validation['email'],
             'password' => Hash::make($validation['password']),
             'id_R' => $role->id_R,
+            // 'id_R' => 1,
         ]);
-        // $token = JWTAuth::fromUser($newuser);compact('token')
+        $token = JWTAuth::fromUser($newuser);
+        // compact('token')
 
-        return response()->json();
+        // return response()->json();
         // auth()->login($newuser);
         // $token = $request->user()->createToken('_token')->plainTextToken;
 
-        // return response()->json(['user' => $newuser, 'token' => $token]);
+        return response()->json(['user' => $newuser, 'token' => $token]);
 
         // return response()->json($newuser);
     }
