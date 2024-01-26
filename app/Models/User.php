@@ -6,20 +6,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+// use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable implements JWTSubject
+// use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable 
 {
     use HasApiTokens, HasFactory, Notifiable;
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
+    // public function getJWTCustomClaims()
+    // {
+    //     return [];implements JWTSubject
+    // }
+    // public function getJWTIdentifier()
+    // {
+    //     return $this->getKey();
+    // }
     /**
      * The attributes that are mass assignable.
      *
@@ -28,6 +30,7 @@ class User extends Authenticatable implements JWTSubject
 
     protected $table = 'users';
     protected $primaryKey = 'id_U';
+    protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = true;
     protected $fillable = [

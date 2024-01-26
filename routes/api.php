@@ -42,8 +42,16 @@ use App\Http\Controllers\UnitController;
 
 Route::get('/index', [HomeController::class, 'index']);
 
+// Route::get('/signup', [UserController::class, 'registerpage'])->name('registerpage');
+Route::post('/register', [UserController::class, 'register'])->name('register');
+// Route::get('/signin', [UserController::class, 'loginpage'])->name('loginpage');
+Route::post('/login', [UserController::class, 'login'])->name('login');
 
-Route::group(['middleware' => 'api'], function () {
+Route::middleware('auth:api')->group(function () {
+    Route::get('/user', function () {
+        return auth()->user();
+    });
+
     Route::get('/gestiondescomptes', [UserController::class, 'gestiondescomptes'])->name('api.gestiondescomptes');
     Route::get('/roleindex', [RoleController::class, 'roleindex'])->name('api.roleindex');
     Route::get('/role/create', [RoleController::class, 'rolecreate'])->name('api.rolecreate');
@@ -88,13 +96,13 @@ Route::group(['middleware' => 'api'], function () {
         Route::post('/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
         Route::delete('/destroy/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
     });
-    Route::group(['prefix' => 'customer'], function () {
-        Route::get('/index', [CustomerController::class, 'index'])->name('customer.index');
-        Route::post('/store', [CustomerController::class, 'store'])->name('customer.store');
-        Route::get('/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
-        Route::post('/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
-        Route::delete('/destroy/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
-    });
+    // Route::group(['prefix' => 'customer'], function () {
+    //     Route::get('/index', [CustomerController::class, 'index'])->name('customer.index');
+    //     Route::post('/store', [CustomerController::class, 'store'])->name('customer.store');
+    //     Route::get('/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
+    //     Route::post('/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
+    //     Route::delete('/destroy/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
+    // });
     Route::group(['prefix' => 'discount'], function () {
         Route::get('/index', [DiscountController::class, 'index'])->name('discount.index');
         Route::post('/store', [DiscountController::class, 'store'])->name('discount.store');
@@ -187,7 +195,3 @@ Route::group(['middleware' => 'api'], function () {
         Route::delete('/destroy/{id}', [UnitController::class, 'destroy'])->name('unit.destroy');
     });
 });
-Route::get('/signup', [UserController::class, 'registerpage'])->name('registerpage');
-Route::post('/register', [UserController::class, 'register'])->name('register');
-Route::get('/signin', [UserController::class, 'loginpage'])->name('loginpage');
-Route::post('/login', [UserController::class, 'login'])->name('login');

@@ -14,6 +14,7 @@ return [
     */
 
     'guard' => 'web',
+    'foreign_key' => 'user_id',
 
     /*
     |--------------------------------------------------------------------------
@@ -26,10 +27,9 @@ return [
     |
     */
 
-    'private_key' => storage_path('oauth-private.key'),
-'public_key' => storage_path('oauth-public.key'),
 
-
+    'private_key' => storage_path('oauth-keys/oauth-private.key'),
+    'public_key' => storage_path('oauth-keys/oauth-public.key'),
 
     /*
     |--------------------------------------------------------------------------
@@ -59,5 +59,6 @@ return [
         'id' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_ID'),
         'secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
     ],
+
 
 ];

@@ -13,11 +13,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-    public function registerpage()
-    {
-        $roles = Role::all();
-        return view('auth.register', compact('roles'));
-    }
+    // public function registerpage()
+    // {
+    //     $roles = Role::all();
+    //     return view('auth.register', compact('roles'));
+    // }
     public function register(Request $request)
     {
         $id_U = Helpers::generateIdU();
@@ -37,23 +37,24 @@ class UserController extends Controller
             'email' => $validation['email'],
             'password' => Hash::make($validation['password']),
             'id_R' => $role->id_R,
-            // 'id_R' => 1,
         ]);
-        $token = JWTAuth::fromUser($newuser);
+        $token = $newuser->createToken('AppName');
+
+        return response()->json(['token' => $token], 201);
         // compact('token')
 
         // return response()->json();
         // auth()->login($newuser);
         // $token = $request->user()->createToken('_token')->plainTextToken;
 
-        return response()->json(['user' => $newuser, 'token' => $token]);
+        // return response()->json(['user' => $newuser, 'token' => $token]);
 
         // return response()->json($newuser);
     }
-    public function loginpage()
-    {
-        return view('auth.login');
-    }
+    // public function loginpage()
+    // {
+    //     return view('auth.login');
+    // }
     public function login(Request $request)
     {
         $v = $request->validate([
@@ -65,14 +66,18 @@ class UserController extends Controller
         // return response()->json($v);
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
+                $user = Auth::user();
+                $token = $user->createToken('AppName')->accessToken;
+
+                return response()->json(['token' => $token], 200);
                 // if ($user->role && $user->role->role_name === 'owner') {
 
-                $token = JWTAuth::fromUser($user);
+                // $token = JWTAuth::fromUser($user);
 
                 // return response()->json(compact('token'));
                 // $token = $request->user()->createToken('token-name')->plainTextToken;
 
-                return response()->json(['user' => $user, 'token' => $token]);
+                // return response()->json(['user' => $user, 'token' => $token]);
                 // return response()->json(['msg' => 'hi :)']);
                 // } else {
 
@@ -83,8 +88,9 @@ class UserController extends Controller
                 //     // return response()->json(['msg' => ':)']);
                 // }
             } else {
+                return response()->json(['error' => 'Unauthorized'], 401);
 
-                return response()->json(['msg' => 'mot de passe incorect :(']);
+                // return response()->json(['msg' => 'mot de passe incorect :(']);
             }
             // return redirect()->route('loginpage');
         } else {
